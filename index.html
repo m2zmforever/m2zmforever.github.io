@@ -3,275 +3,651 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>m2_zm</title>
+    <title>m2_zm - Developer Portfolio</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #111111 50%, #0d0d0d 75%, #050505 100%);
-            color: #e5e7eb;
+            background: radial-gradient(ellipse at top, #0f172a 0%, #020617 45%, #000000 100%);
+            color: #e2e8f0;
             min-height: 100vh;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
+            position: relative;
         }
-        .particles {
+
+        /* Animated background grid */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating orbs */
+        .orb {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 136, 0.8), rgba(0, 255, 136, 0.2));
+            filter: blur(1px);
+            animation: float 8s ease-in-out infinite;
         }
-        .logo-bar {
-            width: 100vw;
+
+        .orb:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .orb:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(15px) rotate(240deg); }
+        }
+
+        /* Particle system */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Header with logo */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .logo-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 32px;
-            margin-bottom: 0.2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 0 20px #00ff88;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 8px 20px;
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(0, 255, 136, 0.5);
+        }
+
+        .logo::before {
+            content: '◆';
+            color: #00ff88;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main hero section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 20px;
             position: relative;
             z-index: 2;
         }
-        .logo {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-            text-shadow: 0 2px 18px #00ff88, 0 0 8px #00ff8840, 0 4px 32px #00ff8840;
-            background: #101010e0;
-            border-radius: 12px;
-            padding: 0.3rem 1.2rem 0.3rem 1.2rem;
-            border: 2px solid #00ff88;
-            box-shadow: 0 0 16px #00ff8840;
-        }
-        .profile-buttons {
-            display: flex;
-            gap: 2.5rem;
-            margin-top: 2.2rem;
-            margin-bottom: 0.5rem;
-            z-index: 10;
-            position: relative;
-            justify-content: flex-start;
-        }
-        .profile-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(10, 20, 20, 0.7);
-            border: 2px solid #00ff88;
-            border-radius: 12px;
-            width: 54px;
-            height: 54px;
-            transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
-            box-shadow: 0 2px 16px #00ff8840;
-            text-decoration: none;
-        }
-        .profile-btn:hover {
-            background: #00ff88;
-            border-color: #00ff88;
-            box-shadow: 0 0 24px #00ff88a0;
-        }
-        .profile-btn svg {
-            display: block;
-            margin: 0 auto;
-        }
-        .profile-btn:hover svg path, .profile-btn:hover svg circle {
-            fill: #0a0a0a !important;
-            stroke: #0a0a0a !important;
-        }
-        .hero {
-            min-height: 100vh;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            position: relative;
-            z-index: 1;
-        }
+
         .hero-content {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            max-width: 1200px;
             width: 100%;
-            max-width: 1100px;
-            gap: 4rem;
-            margin-top: 0;
-            position: relative;
-            z-index: 2;
+            gap: 60px;
         }
-        .profile-image {
-            width: 340px;
-            height: 340px;
-            margin-bottom: 0;
+
+        .profile-section {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 30px;
         }
-        .profile-image img {
+
+        .profile-image-container {
+            position: relative;
+            width: 380px;
+            height: 380px;
+        }
+
+        .profile-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
             border-radius: 50%;
-            box-shadow: 0 0 40px #00ff8890;
+            object-fit: cover;
+            border: 4px solid #00ff88;
+            box-shadow: 
+                0 0 50px rgba(0, 255, 136, 0.5),
+                inset 0 0 50px rgba(0, 255, 136, 0.1);
+            transition: all 0.3s ease;
         }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 80px rgba(0, 255, 136, 0.8),
+                inset 0 0 50px rgba(0, 255, 136, 0.2);
+        }
+
+        .profile-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00ff88, transparent, #00ff88);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .text-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 0;
-            margin-top: 0;
+            gap: 20px;
         }
+
         .hero h1 {
-            font-size: 4.2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #00cc6a, #00ff88);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.1;
-            text-align: left;
+            animation: gradient-shift 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
         }
-        .hero .subtitle {
-            font-size: 1.3rem;
-            color: #9ca3af;
-            margin-bottom: 2.2rem;
-            font-weight: 400;
-            text-align: left;
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Enhanced profile buttons */
+        .profile-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .profile-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .profile-btn:hover::before {
+            left: 100%;
+        }
+
+        .profile-btn:hover {
+            background: #00ff88;
+            border-color: #00ff88;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .profile-btn:hover svg path,
+        .profile-btn:hover svg circle {
+            fill: #000 !important;
+            stroke: #000 !important;
+        }
+
+        /* Skills section */
+        .skills {
+            padding: 80px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .skills h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #00ff88;
+            margin-bottom: 50px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .skill-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .skill-card:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            transform: translateY(-10px);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+
+        .skill-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        .skill-description {
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
         /* Floating particles */
         .m-particle {
             position: absolute;
-            font-size: 2.1rem;
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 2rem;
+            font-family: 'Inter', sans-serif;
             color: #00ff88;
             font-weight: 900;
             opacity: 0;
             pointer-events: none;
             user-select: none;
-            text-shadow: 0 0 16px #00ff88, 0 0 32px #00ff8840;
-            animation: m-float 18s linear forwards;
+            text-shadow: 0 0 20px #00ff88;
+            animation: m-float 15s linear forwards;
         }
+
         @keyframes m-float {
-            0% { opacity: 0; transform: translateY(0) scale(1) rotate(0deg); }
-            5% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-120vh) scale(1.2) rotate(360deg); }
+            0% { 
+                opacity: 0; 
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            10% { 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 1; 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-100vh) scale(1.5) rotate(360deg);
+            }
         }
-        @media (max-width: 900px) {
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
             .hero-content {
                 flex-direction: column;
-                align-items: center;
-                gap: 2rem;
+                gap: 40px;
             }
-            .profile-image {
-                width: 220px;
-                height: 220px;
+            
+            .profile-image-container {
+                width: 300px;
+                height: 300px;
             }
+            
+            .hero h1 {
+                font-size: 4rem;
+                text-align: center;
+            }
+            
             .text-content {
                 align-items: center;
                 text-align: center;
             }
-            .profile-buttons {
-                justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .profile-image-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
             }
         }
-        @media (max-width: 768px) {
-            .hero-content { flex-direction: column; text-align: center; gap: 2rem; }
-            .profile-image { width: 250px; height: 250px; font-size: 5rem; }
-            .hero h1 { font-size: 3rem; }
-            .hero .subtitle { font-size: 1.2rem; }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff88;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
         }
     </style>
 </head>
 <body>
-        <section class="hero">
-            <div class="particles" id="particles"></div>
-            <div class="hero-content center-column">
-                <div class="profile-image">
-                    <img src="https://i.ibb.co/5g1Pff0V/m2zm-1748974722226.png" alt="Profile" />
+    <div class="background-grid"></div>
+    
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    
+    <div class="particles" id="particles"></div>
+    
+    <header class="header">
+        <div class="logo-container">
+            <div class="logo">m2_zm</div>
+        </div>
+    </header>
+    
+    <main class="hero">
+        <div class="hero-content">
+            <div class="profile-section">
+                <div class="profile-image-container">
+                    <div class="profile-ring"></div>
+                    <img src="https://i.ibb.co/5g1Pff0V/m2zm-1748974722226.png" alt="m2_zm Profile" class="profile-image" />
                 </div>
-                <div class="text-content">
-                    <h1>I'm <span class="neon-text">m2_zm</span></h1>
-                    <div class="subtitle">Python / Node.js / C++ Developer</div>
-                    <div class="profile-buttons">
-                        <a href="https://github.com/m2zmforever" class="profile-btn" target="_blank" aria-label="Github">
-                            <svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path fill="#00ff88" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.48 2.87 8.28 6.84 9.63.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.84c.85.004 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
-                        </a>
-                        <a href="https://discord.com/users/874969941583999037" class="profile-btn" target="_blank" aria-label="Discord">
-                            <svg width="26" height="26" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" fill="#00ff88"/>
-                            </svg>
-                        </a>
-                        <a href="mailto:m2zmforever@gmail.com" class="profile-btn" target="_blank" aria-label="Mail">
-                            <svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path fill="#00ff88" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 2v.01L12 13 4 6.01V6h16ZM4 20v-9.99l7.29 6.41a1 1 0 0 0 1.42 0L20 10.01V20H4Z"/></svg>
-                        </a>
-                        <a href="https://steamcommunity.com/profiles/76561199387044503" class="profile-btn" target="_blank" aria-label="Steam">
-                            <svg width="26" height="26" viewBox="0 0 496 512" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.8 52.8 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3 .1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z" fill="#00ff88"/>
-                            </svg>
-                        </a>
+                
+                <div class="profile-buttons">
+                    <a href="https://github.com/m2zmforever" class="profile-btn" target="_blank" aria-label="GitHub">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                            <path fill="#00ff88" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.48 2.87 8.28 6.84 9.63.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.84c.85.004 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="https://discord.com/users/874969941583999037" class="profile-btn" target="_blank" aria-label="Discord">
+                        <svg width="28" height="28" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" fill="#00ff88"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="mailto:m2zmforever@gmail.com" class="profile-btn" target="_blank" aria-label="Email">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                            <path fill="#00ff88" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 2v.01L12 13 4 6.01V6h16ZM4 20v-9.99l7.29 6.41a1 1 0 0 0 1.42 0L20 10.01V20H4Z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="https://steamcommunity.com/profiles/76561199387044503" class="profile-btn" target="_blank" aria-label="Steam">
+                        <svg width="28" height="28" viewBox="0 0 496 512" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.8 52.8 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3 .1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z" fill="#00ff88"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-content">
+                <h1>I'm m2_zm</h1>
+                <div class="subtitle">Full Stack Developer & Creative Coder</div>
+                <div class="description">
+                    Passionate about creating innovative solutions with Python, Node.js, and C++. 
+                    I build scalable applications, elegant user interfaces, and explore the intersection 
+                    of technology and creativity. Always learning, always building.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <section class="skills">
+        <div class="skills-container">
+            <h2>Tech Stack</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🐍</div>
+                    <div class="skill-name">Python</div>
+                    <div class="skill-description">
+                        Backend development, data science, automation, and AI/ML projects
+                    </div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">🌐</div>
+                    <div class="skill-name">Node.js</div>
+                    <div class="skill-description">
+                        Server-side JavaScript, API development, and real-time applications
+                    </div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">⚡</div>
+                    <div class="skill-name">C++</div>
+                    <div class="skill-description">
+                        High-performance applications, system programming, and game development
                     </div>
                 </div>
             </div>
-        </section>
-        <script>
-        // Create floating 'm' particles
-        function spawnMParticle({x, y, random = false}) {
-            const particle = document.createElement('span');
+        </div>
+    </section>
+    
+    <div class="scroll-indicator">↓</div>
+    
+    <script>
+        // Enhanced particle system
+        function createParticle(x, y, options = {}) {
+            const particle = document.createElement('div');
             particle.className = 'm-particle';
             particle.textContent = 'm';
-            if (random) {
-                particle.style.left = (x || Math.random() * window.innerWidth) + 'px';
-                particle.style.top = (y || window.innerHeight + Math.random() * 100) + 'px';
-                const duration = (Math.random() * 8 + 14).toFixed(1);
-                particle.style.animationDuration = duration + 's';
-                particle.style.fontSize = (Math.random() * 1.2 + 1.2) + 'rem';
-                particle.style.opacity = 0;
-                particle.style.transform = `rotate(${Math.random()*360}deg)`;
-            } else {
-                const angle = Math.random() * Math.PI * 2;
-                const radius = Math.random() * 30;
-                const px = x + Math.cos(angle) * radius;
-                const py = y + Math.sin(angle) * radius;
-                particle.style.left = px + 'px';
-                particle.style.top = py + 'px';
-                particle.style.animationDuration = (Math.random() * 0.7 + 1.2).toFixed(2) + 's';
-                particle.style.fontSize = (Math.random() * 1.1 + 1.3) + 'rem';
-                particle.style.opacity = 0;
-                particle.style.transform = `rotate(${Math.random()*360}deg)`;
-            }
+            
+            const finalX = x + (Math.random() - 0.5) * 100;
+            const finalY = y + (Math.random() - 0.5) * 100;
+            
+            particle.style.left = finalX + 'px';
+            particle.style.top = finalY + 'px';
+            particle.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            particle.style.animationDuration = (Math.random() * 3 + 12) + 's';
+            
             document.getElementById('particles').appendChild(particle);
+            
             particle.addEventListener('animationend', () => {
                 particle.remove();
             });
         }
-        function spawnRandomMParticlesContinuously() {
-            setInterval(() => {
-                spawnMParticle({
-                    x: Math.random() * window.innerWidth,
-                    y: window.innerHeight + Math.random() * 100,
-                    random: true
-                });
-            }, 350);
-        }
-        spawnRandomMParticlesContinuously();
-        document.addEventListener('click', function(e) {
-            const ignore = e.target.closest('.profile-btn, .profile-image, a, button, input, textarea');
-            if (!ignore) {
-                for (let i = 0; i < 5; i++) {
-                    spawnMParticle({x: e.clientX, y: e.clientY, random: false});
+        
+        // Continuous particle generation
+        setInterval(() => {
+            createParticle(
+                Math.random() * window.innerWidth,
+                window.innerHeight + 50
+            );
+        }, 800);
+        
+        // Click interaction
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-btn, a, button')) {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        createParticle(e.clientX, e.clientY);
+                    }, i * 100);
                 }
             }
+        });
+        
+        // Smooth scrolling for scroll indicator
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.skills').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+        
+        // Parallax effect for orbs
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const orbs = document.querySelectorAll('.orb');
+            
+            orbs.forEach((orb, index) => {
+                const speed = 0.5 + (index * 0.2);
+                orb.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+        
+        // Add typing animation to subtitle
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+        
+        // Initialize typing animation when page loads
+        window.addEventListener('load', () => {
+            const subtitle = document.querySelector('.subtitle');
+            const originalText = subtitle.textContent;
+            setTimeout(() => {
+                typeWriter(subtitle, originalText, 80);
+            }, 1000);
+        });
+        
+        // Add hover effects to skill cards
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-15px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
         });
     </script>
 </body>
